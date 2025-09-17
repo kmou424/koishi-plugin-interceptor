@@ -1,0 +1,58 @@
+name: Build and Package Interceptor
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: node:22-trixie
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare environment
+        run: |
+          set -e
+          npm i -g pnpm
+          yarn -v || true
+          pnpm -v || true
+
+      - name: Install and build
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          pnpm install --no-frozen-lockfile
+          pnpm run build
+
+      - name: Prepare artifact directory
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('$GITHUB_WORKSPACE/package.json').version")
+          SHORT_SHA=${GITHUB_SHA::7}
+          ARTIFACT_NAME="koishi-plugin-interceptor-${VERSION}-${SHORT_SHA}"
+
+          mkdir -p "$GITHUB_WORKSPACE/bundle"
+          cp -r "$GITHUB_WORKSPACE/lib" "$GITHUB_WORKSPACE/bundle/"
+          cp "$GITHUB_WORKSPACE/package.json" "$GITHUB_WORKSPACE/bundle/"
+
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> "$GITHUB_ENV"
+          echo "Prepared artifact dir: $GITHUB_WORKSPACE/bundle as $ARTIFACT_NAME.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: bundle
+          if-no-files-found: error
+          retention-days: 14

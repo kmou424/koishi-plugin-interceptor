@@ -1,0 +1,31 @@
+{
+  "name": "koishi-plugin-interceptor",
+  "description": "a middleware to intercept messages with specific conditions for koishi",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "license": "MIT",
+  "author": "kmou424 <me@kmou424.moe>",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": [
+    "middleware",
+    "interceptor",
+    "koishi",
+    "plugin"
+  ],
+  "peerDependencies": {
+    "koishi": "^4.18.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.1",
+    "koishi": "^4.18.9",
+    "typescript": "^5.9.2",
+    "yml-register": "^1.2.5"
+  }
+}
