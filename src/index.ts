@@ -28,7 +28,7 @@ const interceptor =
     }
 
     if (
-      config.conditions.every((condition) =>
+      config.conditions.some((condition) =>
         resolver().resolve(session, condition)
       )
     ) {
