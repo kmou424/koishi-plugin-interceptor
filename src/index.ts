@@ -13,7 +13,7 @@ export function apply(ctx: Context, config: Config) {
 
 const interceptor =
   (ctx: Context, config: Config) => (session: Session, next: Next) => {
-    const resolver = (): Resolver | null => {
+    const resolver = ((): Resolver | null => {
       switch (config.mode) {
         case "whitelist":
           return WhiteList;
@@ -22,14 +22,14 @@ const interceptor =
         default:
           return null;
       }
-    };
+    })();
     if (!resolver) {
       throw new Error("Invalid mode");
     }
 
     if (
       config.conditions.some((condition) =>
-        resolver().resolve(session, condition)
+        resolver.resolve(session, condition)
       )
     ) {
       return next();
