@@ -8,7 +8,7 @@ export * from "./type";
 export const name = "interceptor";
 
 export function apply(ctx: Context, config: Config) {
-  ctx.middleware(interceptor(ctx, config));
+  ctx.middleware(interceptor(ctx, config), true);
 }
 
 const interceptor =
