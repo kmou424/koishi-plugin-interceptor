@@ -21,19 +21,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare environment
-        run: |
-          set -e
-          npm i -g pnpm
-          yarn -v || true
-          pnpm -v || true
-
       - name: Install and build
         run: |
           set -euo pipefail
           cd "$GITHUB_WORKSPACE"
-          pnpm install --no-frozen-lockfile
-          pnpm run build
+          yarn
+          yarn build
 
       - name: Prepare artifact directory
         run: |
