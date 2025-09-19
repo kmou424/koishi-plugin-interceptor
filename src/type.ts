@@ -37,6 +37,7 @@ export const Config: Schema<Config> = Schema.object({
     Schema.const("blacklist").description("黑名单模式"),
   ])
     .default("whitelist")
-    .description("拦截模式"),
+    .description("拦截模式")
+    .role("radio"),
   conditions: Schema.array(Condition).default([]).description("条件"),
 });
