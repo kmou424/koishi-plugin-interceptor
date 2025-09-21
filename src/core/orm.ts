@@ -86,7 +86,7 @@ export namespace RuleTable {
       messages.push(
         `规则: [${
           schema.rule.length > 0
-            ? schema.rule.map((rule) => Type.FormatCondition(rule)).join(",")
+            ? schema.rule.map((rule) => Type.FormatCondition(rule)).join(", ")
             : "无"
         }]`
       );

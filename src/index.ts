@@ -1,6 +1,6 @@
 import { Context } from "koishi";
-import { Command } from "./command";
-import { migrate } from "./core";
+import { CommonCommand, EditModeCommand, NormalModeCommand } from "./command";
+import { IsEditMode, migrate } from "./core";
 import { Middleware } from "./middleware";
 import { AppName, Config } from "./type";
 
@@ -29,17 +29,17 @@ export function apply(ctx: Context, config: Config) {
     );
   });
 
-  ctx.middleware(Middleware.Message(ctx), true);
+  ctx.command(`${AppName}`, "拦截器管理").action(CommonCommand.Root(ctx));
 
-  ctx.command(`${AppName}`, "拦截器").action(Command.Root(ctx));
-  ctx.command(`${AppName}.list`, "列出拦截器").action(Command.List(ctx));
-  ctx
-    .command(`${AppName}.new <name:string>`, "添加拦截器")
-    .action(Command.New(ctx));
-  ctx
-    .command(`${AppName}.delete <id:number>`, "删除拦截器")
-    .action(Command.Delete(ctx));
-  ctx
-    .command(`${AppName}.select <id:number>`, "选中拦截器进入编辑模式")
-    .action(Command.Select(ctx));
+  NormalModeCommand.Register(
+    ctx.intersect((session) => {
+      return !IsEditMode(session);
+    })
+  );
+
+  EditModeCommand.Register(
+    ctx.intersect((session) => {
+      return IsEditMode(session);
+    })
+  );
 }
