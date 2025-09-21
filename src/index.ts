@@ -15,19 +15,13 @@ export const inject = {
 export function apply(ctx: Context, config: Config) {
   migrate(ctx);
 
+  ctx.on("command/before-execute", Middleware.BeforeExecute(ctx, config));
   ctx.middleware(Middleware.Interceptor(ctx, config), true);
 
-  ctx = ctx.intersect((session) => {
-    // 仅私聊
-    if (session.event.channel?.type !== 1) {
-      return false;
-    }
-    // 仅管理员
-    return config.admins.some(
-      (admin) =>
-        session.platform === admin.platform && session.userId === admin.id
-    );
-  });
+  ctx = ctx.intersect(
+    (session) =>
+      Middleware.isPrivate(session) && Middleware.isAdmin(session, config)
+  );
 
   ctx.command(`${AppName}`, "拦截器管理").action(CommonCommand.Root(ctx));
 
