@@ -20,8 +20,8 @@ export namespace Middleware {
         continue;
       }
       const matched = Type.ComputeRule(rule.rule, session);
-      if (rule.mode === "blacklist" && !matched) {
-        return true;
+      if (rule.mode === "blacklist" && matched) {
+        return false;
       }
       if (rule.mode === "whitelist" && matched) {
         return true;
