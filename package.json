@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-interceptor",
   "description": "a middleware to intercept messages with specific conditions for koishi",
-  "version": "1.1.0",
+  "version": "1.2.0-beta.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
