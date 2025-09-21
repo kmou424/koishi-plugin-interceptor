@@ -73,7 +73,7 @@ export namespace EditModeCommand {
         cache.update();
       }
       if (output.messages) {
-        session.send(output.messages.join("\n"));
+        await session.send(output.messages.join("\n"));
       }
     };
   }
