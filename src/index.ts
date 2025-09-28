@@ -1,4 +1,4 @@
-import { Context } from "koishi";
+import { Context, Events } from "koishi";
 import { CommonCommand, EditModeCommand, NormalModeCommand } from "./command";
 import { IsEditMode, migrate } from "./core";
 import { Middleware } from "./middleware";
@@ -15,7 +15,33 @@ export const inject = {
 export function apply(ctx: Context, config: Config) {
   migrate(ctx);
 
-  ctx.on("command/before-execute", Middleware.BeforeExecute(ctx, config));
+  const events: (keyof Events<Context>)[] = [
+    "friend-request",
+    "guild-added",
+    "guild-member-added",
+    "guild-member-removed",
+    "guild-member-request",
+    "guild-member-updated",
+    "guild-removed",
+    "guild-request",
+    "guild-role-created",
+    "guild-role-deleted",
+    "guild-role-updated",
+    "guild-updated",
+    "login-added",
+    "login-removed",
+    "login-updated",
+    "message",
+    "message-deleted",
+    "message-updated",
+    "reaction-added",
+    "reaction-removed",
+
+    "command/before-execute",
+  ];
+  for (const event of events) {
+    ctx.on(event, Middleware.BeforeExecute(ctx, config));
+  }
   ctx.middleware(Middleware.Interceptor(ctx, config), true);
 
   ctx = ctx.intersect(
